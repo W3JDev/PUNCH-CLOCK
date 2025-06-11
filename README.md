@@ -8,13 +8,15 @@ _Eliminate 70% of HR workload. Cut costs. Delight your team._
 
 ---
 
-![PUNCH CLOCK Home Page](https://github.com/W3JDev/Project_CLOCKEZ-B44/blob/Lets-Coin/Product%20Images-Punch-Cards/PUNCH%20CLOCK%20Home%20page.jpg?raw=true)
+![PUNCH CLOCK Home Page](https://www.gitbook.com/cdn-cgi/image/dpr=2,width=1920,onerror=redirect,format=auto/https%3A%2F%2Ffiles.gitbook.com%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FGUihImAt81eXKAEiQ8Ib%252Fuploads%252FBLw96WwnPr2o7px7OA9B%252Fpunch-clock-kiosk-image.png%3Falt%3Dmedia%26token%3D41ad178e-b43a-4481-9212-667fbc7a69c3?raw=true)
 *Welcome to the future of attendance and HR automation — professional, bold, and incredibly intuitive.*
 
 ---
 
 ## 🚀 Why PUNCH⏰CLOCK?
 
+![Why Punch Clock](https://www.gitbook.com/cdn-cgi/image/dpr=2,width=760,onerror=redirect,format=auto/https%3A%2F%2Ffiles.gitbook.com%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FGUihImAt81eXKAEiQ8Ib%252Fuploads%252FGnFHM5hEb1uUUdfpSBpj%252FPunch-clock-ai-powered-hr-management.png%3Falt%3Dmedia%26token%3D98ef64db-c550-4651-b05f-20f6f7fc59f9?raw=true)
+*Ai powered Advance HR WORKFORCE Management!*
 - **AI-powered everything:** Automate time tracking, payroll, leave, and analytics.
 - **Zero hardware required:** 100% web, mobile-first, and kiosk-ready.
 - **Enterprise security:** Google OAuth, role-based access, SOC2/ISO27001 compliant.
@@ -61,11 +63,17 @@ _Eliminate 70% of HR workload. Cut costs. Delight your team._
 
 ## 🏷️ Kiosk: Touchless, Secure, Lightning-Fast
 
-![PUNCH CLOCK KIOSK](https://github.com/W3JDev/Project_CLOCKEZ-B44/blob/Lets-Coin/Product%20Images-Punch-Cards/PUNCH%20CLOCK%20KIOSK%20(3).jpg?raw=true)
+![PUNCH CLOCK KIOSK](https://www.gitbook.com/cdn-cgi/image/dpr=2,width=1920,onerror=redirect,format=auto/https%3A%2F%2Ffiles.gitbook.com%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FGUihImAt81eXKAEiQ8Ib%252Fuploads%252FdhxvLXmShek3gdfqRtvM%252F70%2525%2520hr%2520workload%2520redcution-punch-clock.png%3Falt%3Dmedia%26token%3D1b64c154-1ca5-4419-ba62-4b3d83ee4969?raw=true)
 *Empower employees to check in/out securely via PIN, QR, or FaceID — no admin, no hassle.*
 
 ---
 
+## 🔐 Security 
+
+![Security](https://www.gitbook.com/cdn-cgi/image/dpr=2,width=1920,onerror=redirect,format=auto/https%3A%2F%2Ffiles.gitbook.com%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FGUihImAt81eXKAEiQ8Ib%252Fuploads%252FVUVT1tXfGA7JW2EokanI%252Fpunch-clock-security.png%3Falt%3Dmedia%26token%3D23bb36e3-d078-45eb-b329-af34a4bbb293?raw=true)
+*Empower employees to check in/out securely via PIN, QR, or FaceID — no admin, no hassle.*
+
+---
 ## 🗺️ Roadmap & Innovation
 
 ![PUNCH CLOCK Roadmap](https://github.com/W3JDev/Project_CLOCKEZ-B44/blob/Lets-Coin/Product%20Images-Punch-Cards/PUNCH%20CLOCK%20ROADMAP.jpg?raw=true)
