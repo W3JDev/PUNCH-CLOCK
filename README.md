@@ -1,143 +1,129 @@
-# **PUNCH⏰CLOCK**  
-**Modern Workforce Orchestration Platform**  
-_Eliminate 70% of HR workload. Cut costs. Delight your team._
 
-[![Live Demo](https://img.shields.io/badge/TRY-LIVE_DEMO-00b894?style=for-the-badge&logo=vercel)](https://app--punchclock-f4eabd7d.base44.app/Landing)
-[![Documentation](https://img.shields.io/badge/Docs-GitBook-3884FF?style=for-the-badge&logo=gitbook)](https://docs.punchclock.w3jdev.com)
-[![SOC2](https://img.shields.io/badge/SOC2-Certified-009688?style=for-the-badge&logo=icloud)](https://trust.w3jdev.com)
+# **PUNCH⏰CLOCK** ⏰  
+> _Modern Workforce Orchestration Platform_  
+> **Empower your team. Automate HR. Unlock enterprise-grade intelligence.**
 
 ---
 
-![PUNCH CLOCK Home Page](https://www.gitbook.com/cdn-cgi/image/dpr=2,width=1920,onerror=redirect,format=auto/https%3A%2F%2Ffiles.gitbook.com%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FGUihImAt81eXKAEiQ8Ib%252Fuploads%252FBLw96WwnPr2o7px7OA9B%252Fpunch-clock-kiosk-image.png%3Falt%3Dmedia%26token%3D41ad178e-b43a-4481-9212-667fbc7a69c3?raw=true)
-*Welcome to the future of attendance and HR automation — professional, bold, and incredibly intuitive.*
+<p align="center">
+  <img src="https://github.com/W3JDev/PUNCH-CLOCK/assets/branding/hero-punchclock.svg" width="60%" alt="PunchClock Hero Visual"/>
+</p>
 
 ---
 
-## 🚀 Why PUNCH⏰CLOCK?
+<div align="center">
 
-![Why Punch Clock](https://www.gitbook.com/cdn-cgi/image/dpr=2,width=760,onerror=redirect,format=auto/https%3A%2F%2Ffiles.gitbook.com%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FGUihImAt81eXKAEiQ8Ib%252Fuploads%252FGnFHM5hEb1uUUdfpSBpj%252FPunch-clock-ai-powered-hr-management.png%3Falt%3Dmedia%26token%3D98ef64db-c550-4651-b05f-20f6f7fc59f9?raw=true)
-*Ai powered Advance HR WORKFORCE Management!*
-- **AI-powered everything:** Automate time tracking, payroll, leave, and analytics.
-- **Zero hardware required:** 100% web, mobile-first, and kiosk-ready.
-- **Enterprise security:** Google OAuth, role-based access, SOC2/ISO27001 compliant.
-- **Real-time dashboards:** 47+ KPIs, live analytics, department comparisons.
-- **Beautiful UX:** Neo-brutalism design, animated branding, effortless navigation.
+![Version](https://img.shields.io/badge/version-2.0-blueviolet?style=for-the-badge)
+![Status](https://img.shields.io/badge/status-LIVE-success?style=for-the-badge)
+![SOC2](https://img.shields.io/badge/SOC2-Certified-4B9CD3?style=for-the-badge)
+![Multi-Tenant](https://img.shields.io/badge/Multi--Tenant-Full%20Isolation-6c63ff?style=for-the-badge)
+![AI Assistant](https://img.shields.io/badge/AI--Powered-Assistant-FFD700?style=for-the-badge)
+![Kiosk](https://img.shields.io/badge/Kiosk-Touchless%20Check--in-43AA8B?style=for-the-badge)
+![Analytics](https://img.shields.io/badge/Analytics-47%2B%20KPIs-FF7043?style=for-the-badge)
 
----
-
-## 🌟 Features That Set Us Apart
-
-![PUNCH CLOCK Features](https://github.com/W3JDev/Project_CLOCKEZ-B44/blob/Lets-Coin/Product%20Images-Punch-Cards/PUNCH%20CLOCK%20-Features.jpg?raw=true)
-*Everything your workforce needs, from AI-powered insights to real-time payroll magic — all in one place!*
-
-- **AI Chat Assistant:** Contextual, secure, and always available.
-- **Smart Attendance:** PIN, QR, Face Recognition, and location-aware check-ins.
-- **Employee Management:** Rich profiles, multi-type contracts, department organization.
-- **Payroll Engine:** Overtime, multi-region, PDF payslips, real-time compliance.
-- **Leave Management:** Digital workflow, multi-type leaves, automated balances.
-- **Analytics:** Live dashboards, deep-dive KPIs, trend analysis.
-- **Customization:** Branding, themes, kiosk modes, device registration.
+</div>
 
 ---
 
-## 📊 Dashboard: Real-Time Insights, Instant Impact
+## ✨ **What's New in v2.0**  
+> _Unleashing game-changing productivity and intelligence:_
 
-![PUNCH CLOCK Dashboard](https://github.com/W3JDev/Project_CLOCKEZ-B44/blob/Lets-Coin/Product%20Images-Punch-Cards/PUNCH%20CLOCK%20DASHBOARD.jpg?raw=true)
-*Track productivity, attendance, and KPIs at a glance — drive decisions with live data.*
-
----
-
-## 🤖 Meet Your AI Assistant
-
-![PUNCH CLOCK AI Assistant](https://github.com/W3JDev/Project_CLOCKEZ-B44/blob/Lets-Coin/Product%20Images-Punch-Cards/PUNCH%20CLOCK%20-Ai_Assistant.jpg?raw=true)
-*Ask anything. Get instant answers. Experience the smartest HR assistant, always a click away.*
-
----
-
-## 🕒 Effortless Shift Scheduling
-
-![PUNCH CLOCK Shift Scheduling](https://github.com/W3JDev/Project_CLOCKEZ-B44/blob/Lets-Coin/Product%20Images-Punch-Cards/PUNCH%20CLOCK%20-SHIFT-Scheduling.jpg?raw=true)
-*Organize shifts visually, drag-and-drop coverage, and never miss a beat.*
+- 🎯 **Multi-Tenant Architecture:** Enterprise-grade isolation and security.
+- 🤖 **AI Assistant with Persistent Memory:** Remembers your context and preferences!
+- 📥 **Bulk Import/Export:** Effortless CSV/Excel batch operations.
+- 🔔 **Real-Time Notifications:** Never miss a beat—alerts for lateness, payroll, and more.
+- 🏷️ **Enhanced Kiosk:** Touchless, device-aware, supports FaceID.
+- 📊 **Live Dashboards:** 47+ KPIs, anomaly alerts, and predictive insights.
+- 🏁 **Performance & Security:** Lightning-fast, robust compliance, deep audit trails.
 
 ---
 
-## 🏷️ Kiosk: Touchless, Secure, Lightning-Fast
+## 🚀 **Why PUNCH⏰CLOCK?**
 
-![PUNCH CLOCK KIOSK](https://www.gitbook.com/cdn-cgi/image/dpr=2,width=1920,onerror=redirect,format=auto/https%3A%2F%2Ffiles.gitbook.com%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FGUihImAt81eXKAEiQ8Ib%252Fuploads%252FdhxvLXmShek3gdfqRtvM%252F70%2525%2520hr%2520workload%2520redcution-punch-clock.png%3Falt%3Dmedia%26token%3D1b64c154-1ca5-4419-ba62-4b3d83ee4969?raw=true)
-*Empower employees to check in/out securely via PIN, QR, or FaceID — no admin, no hassle.*
-
----
-
-## 🔐 Security 
-
-![Security](https://www.gitbook.com/cdn-cgi/image/dpr=2,width=1920,onerror=redirect,format=auto/https%3A%2F%2Ffiles.gitbook.com%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FGUihImAt81eXKAEiQ8Ib%252Fuploads%252FVUVT1tXfGA7JW2EokanI%252Fpunch-clock-security.png%3Falt%3Dmedia%26token%3D23bb36e3-d078-45eb-b329-af34a4bbb293?raw=true)
-*Empower employees to check in/out securely via PIN, QR, or FaceID — no admin, no hassle.*
-
----
-## 🗺️ Roadmap & Innovation
-
-![PUNCH CLOCK Roadmap](https://github.com/W3JDev/Project_CLOCKEZ-B44/blob/Lets-Coin/Product%20Images-Punch-Cards/PUNCH%20CLOCK%20ROADMAP.jpg?raw=true)
-*Relentlessly innovating — see where we’ve been, and where we’re going next!*
-
----
-
-## 🛠️ System Architecture
-
-**Frontend:** React, Tailwind CSS, Shadcn/UI (Neo-brutalism)  
-**Backend:** Base44 (entity-based, scalable, secure)  
-**AI:** InvokeLLM (context-aware, secure)  
-**Analytics:** Recharts, real-time KPIs  
-**Icons:** Lucide React  
-**Security:** AES-256, TLS 1.3+, role-based access, device registration
+<table>
+<tr>
+<td align="center" width="33%">
+  <img src="https://github.com/W3JDev/PUNCH-CLOCK/assets/branding/ai-assistant.svg" width="60"/><br>
+  <b>AI-Driven HR Automation</b>
+  <br><sub>Automate attendance, payroll, leave, and analytics.</sub>
+</td>
+<td align="center" width="33%">
+  <img src="https://github.com/W3JDev/PUNCH-CLOCK/assets/branding/no-hardware.svg" width="60"/><br>
+  <b>No Hardware Needed</b>
+  <br><sub>100% web-based, mobile-first, kiosk-ready.</sub>
+</td>
+<td align="center" width="33%">
+  <img src="https://github.com/W3JDev/PUNCH-CLOCK/assets/branding/security.svg" width="60"/><br>
+  <b>Enterprise-Grade Security</b>
+  <br><sub>Google OAuth, SOC2, ISO27001, RLS.</sub>
+</td>
+</tr>
+</table>
 
 ---
 
-## 🏗️ Main Pages
+## 🌟 **Standout Features**
 
-- **Landing:** Marketing, features, pricing
-- **UserGuide:** Full user documentation
-- **Kiosk:** Employee check-in/out terminal
-- **Dashboard:** KPIs, analytics, recent activity
-- **Employees:** Management & profiles
-- **Shifts:** Visual scheduling
-- **Reports & Payroll:** Attendance, leave, payslips
-- **AI Assistant:** Full-page chat and smart help
-
----
-
-## 🗃️ Example Entity Schemas
-
-```json
-// Employee
-{
-  "first_name": "string",
-  "last_name": "string",
-  "position": "string",
-  "department": "enum[HR, Engineering, ...]",
-  "employment_type": "enum[Full-time, Part-time, Contractor]",
-  "profile_photo": "string (URL)",
-  ...
-}
-// Attendance
-{
-  "employee_id": "string",
-  "check_in_time": "datetime",
-  "check_in_method": "enum[PIN, QR, Face Recognition, Manual]",
-  ...
-}
-// Organization
-{
-  "business_name": "string",
-  "settings": {
-    "branding": { ... },
-    "kiosk": { ... }
-  }
-}
-```
+- 💬 **AI Chat Assistant:** _Directly add/edit staff, schedule shifts, approve leave, and get instant insights from chat!_
+- 🕵️ **Smart Attendance:** PIN, QR, FaceID, & location-aware check-ins.
+- 🏢 **Multi-Tenant Isolation:** True org-level data isolation & row-level security.
+- 📦 **Bulk Operations:** Import/export staff, shifts, attendance with validation & error reporting.
+- 🔔 **Automated Notifications:** Real-time in-app & email alerts.
+- 🧠 **Persistent AI Memory:** Remembers admins, context, & history.
+- 🎨 **Custom Branding:** Org-specific themes, kiosk modes, device management.
+- 📊 **Comprehensive Analytics:** 47+ KPIs, live dashboards, anomaly detection.
 
 ---
 
-## 🔐 Security & Compliance
+## 📊 **Visual Dashboards & Analytics**
+
+<img src="https://github.com/W3JDev/PUNCH-CLOCK/assets/branding/dashboard-analytics.gif" width="100%" alt="Live Dashboard"/>
+
+- ⚡ _Real-time productivity and attendance tracking._
+- 🏅 _Deep-dive KPIs by department, location, and staff._
+- 🔮 _Predictive trends and anomaly alerts._
+
+---
+
+## 🤖 **Advanced AI Assistant**
+
+> **Interact, automate, and analyze—all in chat.**
+
+- **Direct Actions:** Add/edit staff, create shifts, approve leave, update settings.
+- **Context Awareness:** Always up-to-date with org/team/staff data.
+- **Smart Suggestions:** Recommends actions and flags anomalies _before_ you notice.
+
+---
+
+## 🕒 **Effortless Shift Scheduling**
+
+<img src="https://github.com/W3JDev/PUNCH-CLOCK/assets/branding/shift-scheduler.gif" width="100%" alt="Visual Shift Scheduler"/>
+
+- _Visual drag-and-drop scheduling_
+- _Conflict detection & auto-assignment_
+- _Bulk imports, smart templates_
+
+---
+
+## 🏷️ **Kiosk: Touchless, Secure, Lightning-Fast**
+
+- PIN, QR, and FaceID check-in/out
+- Device registration & org isolation
+- Auto-detection for check-in/out events
+
+---
+
+## 🔔 **Notifications & Alerts**
+
+<img src="https://github.com/W3JDev/PUNCH-CLOCK/assets/branding/notifications-center.gif" width="100%" alt="Notification Center"/>
+
+- Real-time in-app & email notifications
+- Automated alerts for lateness, approvals, payroll
+- Notification center with priority & expiry
+
+---
+
+## 🔐 **Security & Compliance**
 
 ```yaml
 encryption:
@@ -150,15 +136,37 @@ compliance:
   - SOC2 Type II
 authentication:
   - Google OAuth
-  - PIN + QR/Face
+  - PIN + QR/FaceID
+row_level_security: Full multi-tenant isolation
+audit_trails: Comprehensive, per-entity
 ```
 
 ---
 
-## 📦 Quick Start
+## 🚦 **Status & Roadmap**
+
+- ✅ Multi-tenant architecture, persistent AI memory, advanced notifications, bulk import/export, enhanced kiosk, pro docs
+- 🔧 Next: Face recognition, mobile app, advanced analytics, public API, integrations
+
+---
+
+## 🏆 **Competitive Edge**
+
+| Capability              | PUNCH⏰CLOCK | Others        |
+|-------------------------|-------------|--------------|
+| Set-up Time             | **18 min**      | 6.8 days     |
+| Compliance Regions      | **142**         | 38           |
+| Analytics KPIs          | **47+**         | 12           |
+| Cost per Employee/hr    | **$0.23**       | $0.87        |
+| Multi-Tenant Isolation  | **Yes**         | Rare         |
+| AI Actionable Assistant | **Yes**         | No           |
+
+---
+
+## ⚡ **Quick Start**
 
 ```bash
-# Try the Live Demo
+# Live Demo
 OPEN https://app--punchclock-f4eabd7d.base44.app/Landing
 
 # Test Credentials (Admin)
@@ -173,43 +181,74 @@ curl -X POST https://api.punchclock.w3jdev.com/v1/auth \
 
 ---
 
-## 📈 Competitive Edge
+## 🗃️ **Example Entity Schemas**
 
-| Capability              | PUNCH⏰CLOCK | Others        |
-|-------------------------|-------------|--------------|
-| Set-up Time             | 18 min      | 6.8 days     |
-| Compliance Regions      | 142         | 38           |
-| Analytics KPIs          | 47+         | 12           |
-| Cost per Employee/hr    | $0.23       | $0.87        |
+<details>
+<summary>Click to expand</summary>
+
+```json
+// Employee
+{
+  "organization_id": "string",
+  "first_name": "string",
+  "last_name": "string",
+  "position": "string",
+  "department": "string",
+  "employment_type": "string",
+  "profile_photo": "string (URL)"
+}
+// Attendance
+{
+  "organization_id": "string",
+  "employee_id": "string",
+  "check_in_time": "datetime",
+  "check_in_method": "string"
+}
+// Organization
+{
+  "business_name": "string",
+  "org_code": "string",
+  "settings": { "branding": { ... }, "kiosk": { ... } }
+}
+```
+</details>
 
 ---
 
-## 🚦 Status & Roadmap
+## 📜 **Changelog**
 
-- ✅ CRUD for all entities, AI Assistant, Responsive design, Animated branding
-- 🔧 Next: Face recognition, Mobile app, Advanced reporting, Multi-language, Public API
+| Version | Date       | Highlights                                             |
+|---------|------------|-------------------------------------------------------|
+| 2.0     | 2025-07-08 | Multi-tenancy, AI memory, bulk import, notifications  |
+| 1.5     | 2025-04-12 | Enhanced analytics, new kiosk UI                      |
+| 1.0     | 2024-12-01 | Initial public release                                |
 
 ---
 
-## 🤝 Partnership & Support
+## 🤝 **Partnership & Support**
 
-- **Reseller Program:** 25% recurring
+- **Reseller Program:** 25% recurring commissions
 - **Support:** Priority ticketing, dedicated account management
-- **Compliance Docs:** [SOC2](https://trust.w3jdev.com/soc2), [DPIA](https://trust.w3jdev.com/dpia), [Pen Test](https://trust.w3jdev.com/pentest)
+- **Compliance Docs:** [SOC2](https://trust.w3jdev.com/soc2) · [DPIA](https://trust.w3jdev.com/dpia) · [Pen Test](https://trust.w3jdev.com/pentest)
 
 ---
 
-## 📜 License
+## 📜 **License**
 
-W3JDEV ENTERPRISE LICENSE v2.3  
-Patents Pending. See [license terms](https://license.w3jdev.com/punchclock).
-
----
-
-## ⭐ Ready to Transform Your Workforce?  
-**Star this repo**, try the live demo, and join the productivity revolution!
+W3JDEV ENTERPRISE LICENSE v2.3 · [License Terms](https://license.w3jdev.com/punchclock)  
+_Patents Pending._
 
 ---
 
-**© 2024 W3JDEV Technologies**  
-*Redefining Workforce Management Through AI-Powered Precision*
+<p align="center">
+  <b>⭐ Ready to Transform Your Workforce?</b><br>
+  <i>Star this repo, try the live demo, and join the productivity revolution!</i>
+</p>
+
+<p align="center">
+  <strong>© 2025 W3JDEV Technologies</strong><br>
+  <i>Redefining Workforce Management Through AI-Powered Precision</i>
+</p>
+
+---
+
