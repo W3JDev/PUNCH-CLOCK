@@ -55,6 +55,9 @@ model Organization {
   notifications   Notification[]
   auditLogs       AuditLog[]
   aiConversations AiConversation[]
+  kpiMetrics      KpiMetric[]
+  bulkOperations  BulkOperation[]
+  kioskDevices    KioskDevice[]
   
   @@map("organizations")
 }
@@ -96,6 +99,7 @@ model User {
   notifications Notification[]
   auditLogs     AuditLog[]
   aiConversations AiConversation[]
+  bulkOperations BulkOperation[]
   
   @@map("users")
 }
@@ -151,6 +155,11 @@ model Employee {
   pin           String?  // For kiosk check-in
   allowedIPs    String[] @default([])
   faceEncodingId String? // For face recognition
+  customFields  Json     @default("{}")  // Custom employee fields
+  
+  // Geolocation settings for attendance
+  allowedLocations Json @default("[]")  // Array of allowed check-in locations
+  geofenceRadius   Int  @default(100)   // Radius in meters
   
   // Status
   isActive      Boolean  @default(true)
@@ -218,8 +227,17 @@ model AttendanceRecord {
   date          DateTime @db.Date
   checkInTime   DateTime?
   checkOutTime  DateTime?
-  breakStartTime DateTime?
-  breakEndTime   DateTime?
+  
+  // Break tracking with multiple breaks support
+  breakRecords  Json     @default("[]")  // Array of break start/end times
+  
+  // Location and method tracking
+  checkInLocation   String?  // GPS coordinates or location name
+  checkOutLocation  String?
+  checkInLatitude   Decimal?
+  checkInLongitude  Decimal?
+  checkOutLatitude  Decimal?
+  checkOutLongitude Decimal?
   
   // Metadata
   checkInMethod CheckInMethod?
@@ -234,7 +252,9 @@ model AttendanceRecord {
   // Calculated Fields
   hoursWorked   Decimal?
   overtimeHours Decimal?
-  breakDuration Int?     // in minutes
+  totalBreakTime Int?     // Total break duration in minutes
+  lateBy        Int?      // Minutes late
+  earlyLeaveBy  Int?      // Minutes of early leave
   
   // Status
   status        AttendanceStatus @default(PRESENT)
@@ -256,6 +276,9 @@ enum CheckInMethod {
   MANUAL
   MOBILE_APP
   WEB_BROWSER
+  BIOMETRIC
+  NFC
+  VOICE_RECOGNITION
 }
 
 enum AttendanceStatus {
@@ -513,6 +536,128 @@ model AiConversation {
   isActive      Boolean  @default(true)
   
   @@map("ai_conversations")
+}
+
+// ============================================================================
+// KPI METRICS & ANALYTICS
+// ============================================================================
+
+model KpiMetric {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Organization
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // Metric Info
+  metricName    String   // e.g., "attendance_rate", "avg_hours_worked"
+  metricValue   Decimal
+  metricDate    DateTime @db.Date
+  metricPeriod  MetricPeriod @default(DAILY)
+  
+  // Dimensions
+  departmentId  String?
+  employeeId    String?
+  
+  // Metadata
+  metadata      Json     @default("{}")
+  
+  @@unique([organizationId, metricName, metricDate, metricPeriod, departmentId, employeeId])
+  @@map("kpi_metrics")
+}
+
+enum MetricPeriod {
+  DAILY
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+// ============================================================================
+// BULK OPERATIONS
+// ============================================================================
+
+model BulkOperation {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Organization
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // User who initiated the operation
+  userId        String
+  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Operation Info
+  operationType BulkOperationType
+  fileName      String?
+  totalRecords  Int
+  processedRecords Int @default(0)
+  successfulRecords Int @default(0)
+  failedRecords Int @default(0)
+  
+  // Status
+  status        BulkOperationStatus @default(PENDING)
+  startedAt     DateTime?
+  completedAt   DateTime?
+  
+  // Results
+  errors        Json     @default("[]")  // Array of error objects
+  summary       Json     @default("{}")
+  
+  @@map("bulk_operations")
+}
+
+enum BulkOperationType {
+  EMPLOYEE_IMPORT
+  EMPLOYEE_EXPORT
+  ATTENDANCE_IMPORT
+  ATTENDANCE_EXPORT
+  PAYROLL_EXPORT
+}
+
+enum BulkOperationStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+// ============================================================================
+// KIOSK CONFIGURATION
+// ============================================================================
+
+model KioskDevice {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Organization
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // Device Info
+  deviceId      String   @unique  // Hardware identifier
+  deviceName    String
+  location      String?
+  ipAddress     String?
+  
+  // Configuration
+  settings      Json     @default("{}")
+  features      Json     @default("{}")  // enabled features like face_id, qr_code
+  
+  // Status
+  isActive      Boolean  @default(true)
+  lastSeen      DateTime?
+  
+  @@unique([organizationId, deviceName])
+  @@map("kiosk_devices")
 }
 
 // ============================================================================

@@ -26,6 +26,7 @@ import aiRoutes from '@/routes/ai.routes';
 import kioskRoutes from '@/routes/kiosk.routes';
 import reportRoutes from '@/routes/report.routes';
 import webhookRoutes from '@/routes/webhook.routes';
+import analyticsRoutes from '@/routes/analytics.routes';
 
 // Load environment variables
 dotenv.config();
@@ -95,6 +96,7 @@ app.use('/api/v1/notifications', notificationRoutes);
 app.use('/api/v1/ai', aiRoutes);
 app.use('/api/v1/kiosk', kioskRoutes);
 app.use('/api/v1/reports', reportRoutes);
+app.use('/api/v1/analytics', analyticsRoutes);
 app.use('/api/v1/webhooks', webhookRoutes);
 
 // Socket.IO for real-time features
