@@ -13,7 +13,12 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "next": "^14.0.3",
@@ -40,7 +45,11 @@
     "zod": "^3.22.4",
     "recharts": "^2.8.0",
     "react-webcam": "^7.2.0",
-    "date-fns": "^2.30.0"
+    "date-fns": "^2.30.0",
+    "@prisma/client": "^5.7.0",
+    "prisma": "^5.7.0",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
@@ -55,6 +64,8 @@
     "jest-environment-jsdom": "^29.7.0",
     "@testing-library/react": "^14.1.2",
     "@testing-library/jest-dom": "^6.1.5",
-    "@playwright/test": "^1.40.1"
+    "@playwright/test": "^1.40.1",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/bcryptjs": "^2.4.6"
   }
 }
