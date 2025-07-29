@@ -209,10 +209,15 @@ export default function HomePage() {
             
             <div className="border-t pt-6">
               <div className="text-center">
-                <Button className="punch-gradient text-white" size="lg">
-                  🚀 Start Development Journey
-                </Button>
-                <p className="text-sm text-muted-foreground mt-2">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button className="punch-gradient text-white" size="lg" onClick={() => window.location.href = '/dashboard'}>
+                    🚀 View Live Dashboard
+                  </Button>
+                  <Button variant="outline" size="lg">
+                    📖 View Documentation
+                  </Button>
+                </div>
+                <p className="text-sm text-muted-foreground mt-4">
                   Complete platform independence from Base44 • Production-ready codebase • Enterprise-grade security
                 </p>
               </div>
