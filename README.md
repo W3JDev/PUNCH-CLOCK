@@ -1,27 +1,95 @@
 
 # **PUNCH⏰CLOCK** ⏰  
-> _Modern Workforce Orchestration Platform_  
-> **Empower your team. Automate HR. Unlock enterprise-grade intelligence.**
+> _Enterprise Workforce Orchestration Platform - Full Independence Rebuild_  
+> **Complete source code control • Production-ready • Enterprise-grade security**
 
 ---
 
-<p align="center">
-  <img src="https://github.com/W3JDev/PUNCH-CLOCK/assets/branding/hero-punchclock.svg" width="60%" alt="PunchClock Hero Visual"/>
-</p>
+## 🚀 Enterprise Rebuild Complete
 
----
+Transform from Base44-dependent to fully independent platform with modern full-stack architecture.
 
 <div align="center">
 
 ![Version](https://img.shields.io/badge/version-2.0-blueviolet?style=for-the-badge)
-![Status](https://img.shields.io/badge/status-LIVE-success?style=for-the-badge)
-![SOC2](https://img.shields.io/badge/SOC2-Certified-4B9CD3?style=for-the-badge)
-![Multi-Tenant](https://img.shields.io/badge/Multi--Tenant-Full%20Isolation-6c63ff?style=for-the-badge)
-![AI Assistant](https://img.shields.io/badge/AI--Powered-Assistant-FFD700?style=for-the-badge)
-![Kiosk](https://img.shields.io/badge/Kiosk-Touchless%20Check--in-43AA8B?style=for-the-badge)
-![Analytics](https://img.shields.io/badge/Analytics-47%2B%20KPIs-FF7043?style=for-the-badge)
+![Status](https://img.shields.io/badge/status-ENTERPRISE%20REBUILD-orange?style=for-the-badge)
+![Independence](https://img.shields.io/badge/Base44-INDEPENDENT-success?style=for-the-badge)
+![Stack](https://img.shields.io/badge/Full%20Stack-Node.js%20%2B%20Next.js-6c63ff?style=for-the-badge)
+![Multi-Tenant](https://img.shields.io/badge/Multi--Tenant-PostgreSQL-4B9CD3?style=for-the-badge)
+![AI Assistant](https://img.shields.io/badge/AI--Powered-OpenAI%20Ready-FFD700?style=for-the-badge)
 
 </div>
+
+---
+
+## 🏗️ Architecture Overview
+
+- **Backend**: Node.js + Express + TypeScript + Prisma + PostgreSQL
+- **Frontend**: Next.js 14 + TypeScript + Tailwind CSS + Shadcn/ui
+- **Database**: PostgreSQL 15+ with multi-tenant Row-Level Security
+- **Cache**: Redis for sessions and real-time data
+- **AI**: OpenAI/Anthropic integration with persistent memory
+- **DevOps**: Docker + GitHub Actions + Automated CI/CD
+- **Security**: JWT + Google OAuth + Rate limiting + Audit logs
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 20+
+- Docker & Docker Compose
+- PostgreSQL 15+
+- Redis 7+
+
+### Installation
+
+1. **Clone and install**
+   ```bash
+   git clone https://github.com/W3JDev/PUNCH-CLOCK.git
+   cd PUNCH-CLOCK
+   npm install
+   ```
+
+2. **Setup environment**
+   ```bash
+   cp .env.example .env
+   cp apps/backend/.env.example apps/backend/.env
+   # Edit with your configuration
+   ```
+
+3. **Start with Docker**
+   ```bash
+   npm run docker:dev
+   ```
+
+4. **Access application**
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:3001
+   - Health Check: http://localhost:3001/health
+
+## 📊 Project Structure
+
+```
+PUNCH-CLOCK/
+├── apps/
+│   ├── backend/           # Node.js + Express API
+│   │   ├── src/
+│   │   │   ├── controllers/
+│   │   │   ├── middleware/
+│   │   │   ├── routes/
+│   │   │   ├── services/
+│   │   │   └── utils/
+│   │   ├── prisma/schema.prisma
+│   │   └── Dockerfile
+│   └── frontend/          # Next.js 14 App
+│       ├── src/
+│       │   ├── app/
+│       │   ├── components/
+│       │   └── lib/
+│       └── Dockerfile
+├── .github/workflows/     # CI/CD Pipeline
+├── docker-compose.dev.yml
+└── package.json
+```
 
 ---
 

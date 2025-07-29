@@ -1,0 +1,48 @@
+{
+  "name": "punch-clock",
+  "version": "2.0.0",
+  "description": "Enterprise workforce management platform with AI-powered automation",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run dev --workspace=@punch-clock/backend",
+    "dev:frontend": "npm run dev --workspace=@punch-clock/frontend",
+    "build": "npm run build --workspaces",
+    "build:backend": "npm run build --workspace=@punch-clock/backend",
+    "build:frontend": "npm run build --workspace=@punch-clock/frontend",
+    "test": "npm run test --workspaces",
+    "test:e2e": "npm run test:e2e --workspace=@punch-clock/frontend",
+    "lint": "npm run lint --workspaces",
+    "lint:fix": "npm run lint:fix --workspaces",
+    "type-check": "npm run type-check --workspaces",
+    "db:generate": "npm run db:generate --workspace=@punch-clock/backend",
+    "db:migrate": "npm run db:migrate --workspace=@punch-clock/backend",
+    "db:studio": "npm run db:studio --workspace=@punch-clock/backend",
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up",
+    "docker:prod": "docker-compose -f docker-compose.prod.yml up",
+    "setup": "npm install && npm run db:generate"
+  },
+  "keywords": [
+    "workforce-management",
+    "attendance-tracking",
+    "ai-assistant",
+    "multi-tenant",
+    "enterprise",
+    "hr-automation"
+  ],
+  "author": "W3JDev Technologies",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "concurrently": "^8.2.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}
