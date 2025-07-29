@@ -285,7 +285,7 @@ export default function AttendancePage() {
             <CardTitle className="flex items-center justify-between">
               <div className="flex items-center">
                 <Calendar className="h-5 w-5 mr-2" />
-                Today's Attendance - {new Date().toLocaleDateString()}
+                Today&apos;s Attendance - {new Date().toLocaleDateString()}
               </div>
               <Badge className="bg-green-100 text-green-800">Live</Badge>
             </CardTitle>

@@ -283,7 +283,7 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <AlertTriangle className="h-5 w-5 mr-2 text-orange-600" />
-              Today's Alerts
+              Today&apos;s Alerts
             </CardTitle>
           </CardHeader>
           <CardContent>
