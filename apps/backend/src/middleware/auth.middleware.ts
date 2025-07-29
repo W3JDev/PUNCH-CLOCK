@@ -14,7 +14,7 @@ interface AuthenticatedRequest extends Request {
   };
 }
 
-export const authenticateToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const authenticateToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
@@ -69,7 +69,7 @@ export const authenticateToken = async (req: AuthenticatedRequest, res: Response
 };
 
 export const requireRole = (requiredRoles: string[]) => {
-  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
     if (!req.user) {
       return res.status(401).json({ error: 'Authentication required' });
     }

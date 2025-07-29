@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-export const validateOrganization = (req: Request, res: Response, next: NextFunction) => {
+export const validateOrganization = (req: Request, res: Response, next: NextFunction): void => {
   try {
     // Get organization ID from authenticated user or header
     const organizationId = req.user?.organizationId || req.headers['x-organization-id'];
