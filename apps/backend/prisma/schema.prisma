@@ -1,0 +1,549 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// CORE TENANT MODEL
+// ============================================================================
+
+model Organization {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Basic Info
+  businessName    String
+  orgCode         String   @unique
+  domain          String?  @unique
+  timezone        String   @default("UTC")
+  
+  // Contact Info
+  email           String?
+  phone           String?
+  address         String?
+  city            String?
+  state           String?
+  country         String?
+  postalCode      String?
+  
+  // Settings
+  settings        Json     @default("{}")
+  branding        Json     @default("{}")
+  features        Json     @default("{}")
+  
+  // Status
+  isActive        Boolean  @default(true)
+  isPremium       Boolean  @default(false)
+  subscriptionEnd DateTime?
+  
+  // Relationships
+  users           User[]
+  employees       Employee[]
+  departments     Department[]
+  shifts          Shift[]
+  attendanceRecords AttendanceRecord[]
+  leaveRequests   LeaveRequest[]
+  payrollRecords  PayrollRecord[]
+  notifications   Notification[]
+  auditLogs       AuditLog[]
+  aiConversations AiConversation[]
+  
+  @@map("organizations")
+}
+
+// ============================================================================
+// USER MANAGEMENT
+// ============================================================================
+
+model User {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Basic Info
+  email         String   @unique
+  firstName     String?
+  lastName      String?
+  profilePhoto  String?
+  
+  // Authentication
+  passwordHash  String?
+  googleId      String?  @unique
+  emailVerified Boolean  @default(false)
+  
+  // Organization Access
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // Role & Permissions
+  role          UserRole @default(EMPLOYEE)
+  permissions   Json     @default("[]")
+  
+  // Status
+  isActive      Boolean  @default(true)
+  lastLoginAt   DateTime?
+  
+  // Relationships
+  employee      Employee?
+  notifications Notification[]
+  auditLogs     AuditLog[]
+  aiConversations AiConversation[]
+  
+  @@map("users")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ORG_ADMIN
+  HR_MANAGER
+  MANAGER
+  EMPLOYEE
+}
+
+// ============================================================================
+// EMPLOYEE MANAGEMENT
+// ============================================================================
+
+model Employee {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Organization
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // User Account (Optional)
+  userId        String?  @unique
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  // Personal Info
+  employeeId    String   // Custom employee ID
+  firstName     String
+  lastName      String
+  email         String?
+  phone         String?
+  dateOfBirth   DateTime?
+  profilePhoto  String?
+  
+  // Employment Info
+  position      String?
+  departmentId  String?
+  department    Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  employmentType EmploymentType @default(FULL_TIME)
+  hireDate      DateTime @default(now())
+  terminationDate DateTime?
+  
+  // Compensation
+  salary        Decimal?
+  hourlyRate    Decimal?
+  currency      String   @default("USD")
+  
+  // Settings
+  pin           String?  // For kiosk check-in
+  allowedIPs    String[] @default([])
+  faceEncodingId String? // For face recognition
+  
+  // Status
+  isActive      Boolean  @default(true)
+  
+  // Relationships
+  attendanceRecords AttendanceRecord[]
+  leaveRequests     LeaveRequest[]
+  payrollRecords    PayrollRecord[]
+  shiftAssignments  ShiftAssignment[]
+  
+  @@unique([organizationId, employeeId])
+  @@map("employees")
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERN
+  TEMPORARY
+}
+
+model Department {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Organization
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // Department Info
+  name          String
+  description   String?
+  managerId     String?
+  
+  // Status
+  isActive      Boolean  @default(true)
+  
+  // Relationships
+  employees     Employee[]
+  
+  @@unique([organizationId, name])
+  @@map("departments")
+}
+
+// ============================================================================
+// ATTENDANCE SYSTEM
+// ============================================================================
+
+model AttendanceRecord {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Organization
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // Employee
+  employeeId    String
+  employee      Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  
+  // Attendance Data
+  date          DateTime @db.Date
+  checkInTime   DateTime?
+  checkOutTime  DateTime?
+  breakStartTime DateTime?
+  breakEndTime   DateTime?
+  
+  // Metadata
+  checkInMethod CheckInMethod?
+  checkOutMethod CheckInMethod?
+  checkInLocation String?
+  checkOutLocation String?
+  checkInIp     String?
+  checkOutIp    String?
+  checkInDevice String?
+  checkOutDevice String?
+  
+  // Calculated Fields
+  hoursWorked   Decimal?
+  overtimeHours Decimal?
+  breakDuration Int?     // in minutes
+  
+  // Status
+  status        AttendanceStatus @default(PRESENT)
+  isLate        Boolean @default(false)
+  isEarlyLeave  Boolean @default(false)
+  
+  // Notes
+  notes         String?
+  adminNotes    String?
+  
+  @@unique([organizationId, employeeId, date])
+  @@map("attendance_records")
+}
+
+enum CheckInMethod {
+  PIN
+  QR_CODE
+  FACE_ID
+  MANUAL
+  MOBILE_APP
+  WEB_BROWSER
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  HALF_DAY
+  WORK_FROM_HOME
+  ON_LEAVE
+}
+
+// ============================================================================
+// SHIFT MANAGEMENT
+// ============================================================================
+
+model Shift {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Organization
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // Shift Info
+  name          String
+  description   String?
+  startTime     String   // HH:MM format
+  endTime       String   // HH:MM format
+  breakDuration Int      @default(0) // in minutes
+  
+  // Settings
+  allowedLateness Int    @default(0) // in minutes
+  isFlexible    Boolean @default(false)
+  
+  // Days of Week (0 = Sunday, 6 = Saturday)
+  daysOfWeek    Int[]   @default([1, 2, 3, 4, 5])
+  
+  // Status
+  isActive      Boolean @default(true)
+  
+  // Relationships
+  assignments   ShiftAssignment[]
+  
+  @@unique([organizationId, name])
+  @@map("shifts")
+}
+
+model ShiftAssignment {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Employee
+  employeeId    String
+  employee      Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  
+  // Shift
+  shiftId       String
+  shift         Shift @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  
+  // Assignment Period
+  startDate     DateTime @db.Date
+  endDate       DateTime? @db.Date
+  
+  // Status
+  isActive      Boolean @default(true)
+  
+  @@unique([employeeId, shiftId, startDate])
+  @@map("shift_assignments")
+}
+
+// ============================================================================
+// LEAVE MANAGEMENT
+// ============================================================================
+
+model LeaveRequest {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Organization
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // Employee
+  employeeId    String
+  employee      Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  
+  // Leave Details
+  leaveType     LeaveType
+  startDate     DateTime @db.Date
+  endDate       DateTime @db.Date
+  reason        String?
+  
+  // Approval
+  status        LeaveStatus @default(PENDING)
+  approvedBy    String?
+  approvedAt    DateTime?
+  rejectionReason String?
+  
+  // Calculated
+  totalDays     Int
+  
+  @@map("leave_requests")
+}
+
+enum LeaveType {
+  ANNUAL
+  SICK
+  PERSONAL
+  MATERNITY
+  PATERNITY
+  EMERGENCY
+  UNPAID
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+// ============================================================================
+// PAYROLL SYSTEM
+// ============================================================================
+
+model PayrollRecord {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Organization
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // Employee
+  employeeId    String
+  employee      Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  
+  // Payroll Period
+  periodStart   DateTime @db.Date
+  periodEnd     DateTime @db.Date
+  payDate       DateTime @db.Date
+  
+  // Hours
+  regularHours  Decimal
+  overtimeHours Decimal  @default(0)
+  
+  // Amounts
+  regularPay    Decimal
+  overtimePay   Decimal  @default(0)
+  bonuses       Decimal  @default(0)
+  deductions    Decimal  @default(0)
+  grossPay      Decimal
+  netPay        Decimal
+  
+  // Tax & Benefits
+  taxDeductions Json     @default("{}")
+  benefits      Json     @default("{}")
+  
+  // Status
+  status        PayrollStatus @default(DRAFT)
+  
+  @@unique([organizationId, employeeId, periodStart, periodEnd])
+  @@map("payroll_records")
+}
+
+enum PayrollStatus {
+  DRAFT
+  CALCULATED
+  APPROVED
+  PAID
+}
+
+// ============================================================================
+// NOTIFICATIONS SYSTEM
+// ============================================================================
+
+model Notification {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Organization
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // Recipient
+  userId        String
+  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Notification Data
+  title         String
+  message       String
+  type          NotificationType
+  priority      NotificationPriority @default(NORMAL)
+  
+  // Metadata
+  data          Json?    // Additional data
+  actionUrl     String?
+  
+  // Status
+  isRead        Boolean  @default(false)
+  readAt        DateTime?
+  
+  // Expiry
+  expiresAt     DateTime?
+  
+  @@map("notifications")
+}
+
+enum NotificationType {
+  ATTENDANCE_REMINDER
+  LATE_ARRIVAL
+  LEAVE_REQUEST
+  PAYROLL_READY
+  SYSTEM_UPDATE
+  AI_INSIGHT
+  GENERAL
+}
+
+enum NotificationPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+// ============================================================================
+// AI ASSISTANT
+// ============================================================================
+
+model AiConversation {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Organization
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // User
+  userId        String
+  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Conversation Data
+  title         String?
+  messages      Json     // Array of message objects
+  context       Json     @default("{}")
+  
+  // Metadata
+  totalMessages Int      @default(0)
+  isActive      Boolean  @default(true)
+  
+  @@map("ai_conversations")
+}
+
+// ============================================================================
+// AUDIT & COMPLIANCE
+// ============================================================================
+
+model AuditLog {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  
+  // Organization
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // User
+  userId        String?
+  user          User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  // Audit Data
+  action        String   // e.g., "CREATE_EMPLOYEE", "UPDATE_ATTENDANCE"
+  resource      String   // e.g., "Employee", "AttendanceRecord"
+  resourceId    String?  // ID of the affected resource
+  
+  // Details
+  oldValues     Json?
+  newValues     Json?
+  metadata      Json     @default("{}")
+  
+  // Context
+  ipAddress     String?
+  userAgent     String?
+  
+  @@map("audit_logs")
+}
