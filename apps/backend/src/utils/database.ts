@@ -35,4 +35,46 @@ export async function disconnectDatabase() {
   logger.info('Database connection closed');
 }
 
+/**
+ * Create a database client with organization context for RLS
+ */
+export const createOrgContextDB = (organizationId: string): PrismaClient => {
+  return db.$extends({
+    query: {
+      $allModels: {
+        async $allOperations({ args, query }: any) {
+          // Set organization context before each query
+          await db.$executeRaw`SELECT set_organization_context(${organizationId})`;
+          
+          try {
+            const result = await query(args);
+            return result;
+          } finally {
+            // Clear context after query (optional, as it's session-scoped)
+            // await db.$executeRaw`SELECT clear_organization_context()`;
+          }
+        },
+      },
+    },
+  });
+};
+
+/**
+ * Execute queries with organization context
+ */
+export const withOrgContext = async <T>(
+  organizationId: string,
+  callback: (db: PrismaClient) => Promise<T>
+): Promise<T> => {
+  // Set organization context
+  await db.$executeRaw`SELECT set_organization_context(${organizationId})`;
+  
+  try {
+    return await callback(db);
+  } finally {
+    // Clear context
+    await db.$executeRaw`SELECT clear_organization_context()`;
+  }
+};
+
 export { db };

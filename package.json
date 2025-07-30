@@ -19,12 +19,13 @@
     "lint": "npm run lint --workspaces",
     "lint:fix": "npm run lint:fix --workspaces",
     "type-check": "npm run type-check --workspaces",
-    "db:generate": "npm run db:generate --workspace=@punch-clock/backend",
+    "db:generate": "npm run db:generate --workspace=@punch-clock/backend && npm run db:generate --workspace=@punch-clock/frontend",
     "db:migrate": "npm run db:migrate --workspace=@punch-clock/backend",
     "db:studio": "npm run db:studio --workspace=@punch-clock/backend",
     "docker:dev": "docker-compose -f docker-compose.dev.yml up",
     "docker:prod": "docker-compose -f docker-compose.prod.yml up",
-    "setup": "npm install && npm run db:generate"
+    "setup": "npm install && npm run db:generate",
+    "postinstall": "echo 'Dependencies installed - run npm run db:generate to setup Prisma clients'"
   },
   "keywords": [
     "workforce-management",

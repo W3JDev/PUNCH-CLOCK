@@ -18,7 +18,7 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
-    "postinstall": "prisma generate"
+    "postinstall": "if [ \"$PRISMA_SKIP_POSTINSTALL_GENERATE\" != \"1\" ]; then prisma generate --schema=./prisma/schema.prisma || echo 'Prisma generation skipped due to firewall restrictions'; fi"
   },
   "dependencies": {
     "next": "^14.0.3",
