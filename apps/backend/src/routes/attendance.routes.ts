@@ -604,7 +604,7 @@ router.get('/records', async (req: Request, res: Response) => {
       });
     }
 
-    let whereCondition: any = {
+    let whereCondition: AttendanceWhereCondition = {
       organizationId: organizationId as string
     };
 
