@@ -21,16 +21,14 @@ interface AttendanceRequest {
 }
 
 // Helper function to emit real-time updates
-function emitAttendanceUpdate(organizationId: string, eventType: string, data: any) {
+function emitAttendanceUpdate(io: any, organizationId: string, eventType: string, data: any) {
   try {
-    if (globalThis.io) {
-      globalThis.io.to(`org-${organizationId}`).emit('attendance-update', {
-        type: eventType,
-        data,
-        timestamp: new Date().toISOString()
-      });
-      logger.info(`Emitted real-time update: ${eventType}`, { organizationId });
-    }
+    io.to(`org-${organizationId}`).emit('attendance-update', {
+      type: eventType,
+      data,
+      timestamp: new Date().toISOString()
+    });
+    logger.info(`Emitted real-time update: ${eventType}`, { organizationId });
   } catch (error) {
     logger.error('Failed to emit real-time update:', error);
   }
