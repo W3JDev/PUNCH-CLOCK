@@ -47,7 +47,12 @@ router.get('/', async (req: Request, res: Response) => {
       });
     }
 
-    let whereCondition: any = {
+    interface ShiftWhereCondition {
+      organizationId: string;
+      isActive?: boolean;
+    }
+
+    let whereCondition: ShiftWhereCondition = {
       organizationId: organizationId as string
     };
 
