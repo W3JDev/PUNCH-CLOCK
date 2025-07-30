@@ -13,7 +13,7 @@ router.use(authenticateToken);
 router.use(tenantIsolation);
 
 // @route   GET /api/v1/employees
-// @desc    Get all employees in the organization
+// @desc    Get all employees in the organization (Phase 2 Smart Attendance System)
 // @access  Private (Manager+)
 router.get('/', requireManager, [
   query('page')
@@ -36,7 +36,11 @@ router.get('/', requireManager, [
   query('isActive')
     .optional()
     .isBoolean()
-    .withMessage('isActive must be a boolean')
+    .withMessage('isActive must be a boolean'),
+  query('employmentType')
+    .optional()
+    .isIn(['FULL_TIME', 'PART_TIME', 'CONTRACT', 'INTERN', 'TEMPORARY'])
+    .withMessage('Invalid employment type')
 ], auditRead('Employee'), async (req: Request, res: Response): Promise<Response> => {
   try {
     // Check validation errors
@@ -61,6 +65,7 @@ router.get('/', requireManager, [
     const skip = (page - 1) * limit;
     const search = req.query.search as string;
     const departmentId = req.query.departmentId as string;
+    const employmentType = req.query.employmentType as string;
     const isActive = req.query.isActive === 'true' ? true : req.query.isActive === 'false' ? false : undefined;
 
     // Build where clause with tenant isolation
@@ -81,11 +86,15 @@ router.get('/', requireManager, [
       where.departmentId = departmentId;
     }
 
+    if (employmentType) {
+      where.employmentType = employmentType;
+    }
+
     if (isActive !== undefined) {
       where.isActive = isActive;
     }
 
-    // Get employees with pagination
+    // Get employees with pagination and Phase 2 enhanced data
     const [employees, totalCount] = await Promise.all([
       db.employee.findMany({
         where,
@@ -102,6 +111,8 @@ router.get('/', requireManager, [
             select: {
               id: true,
               email: true,
+              role: true,
+              isActive: true,
               lastLoginAt: true
             }
           },
@@ -135,7 +146,8 @@ router.get('/', requireManager, [
           hasNextPage: page < totalPages,
           hasPreviousPage: page > 1
         }
-      }
+      },
+      count: employees.length
     });
   } catch (error: any) {
     logger.error('Failed to get employees:', error);
@@ -147,7 +159,7 @@ router.get('/', requireManager, [
 });
 
 // @route   POST /api/v1/employees
-// @desc    Create new employee
+// @desc    Create new employee (Phase 2 Smart Attendance System)
 // @access  Private (HR Manager+)
 router.post('/', requireHRManager, [
   body('firstName')
@@ -196,7 +208,19 @@ router.post('/', requireHRManager, [
   body('hireDate')
     .optional()
     .isISO8601()
-    .withMessage('Hire date must be a valid date')
+    .withMessage('Hire date must be a valid date'),
+  body('dateOfBirth')
+    .optional()
+    .isISO8601()
+    .withMessage('Date of birth must be a valid date'),
+  body('currency')
+    .optional()
+    .isLength({ min: 3, max: 3 })
+    .withMessage('Currency must be a 3-letter code'),
+  body('pin')
+    .optional()
+    .isLength({ min: 4, max: 8 })
+    .withMessage('PIN must be between 4 and 8 characters')
 ], auditCreate('Employee'), async (req: Request, res: Response): Promise<Response> => {
   try {
     // Check validation errors
@@ -222,12 +246,15 @@ router.post('/', requireHRManager, [
       employeeId,
       email,
       phone,
+      dateOfBirth,
       position,
       departmentId,
       employmentType,
+      hireDate,
       salary,
       hourlyRate,
-      hireDate
+      currency,
+      pin
     } = req.body;
 
     // Check if employee ID already exists in this organization
@@ -281,34 +308,51 @@ router.post('/', requireHRManager, [
       }
     }
 
-    // Create employee
+    // Create employee with Phase 2 enhanced data
+    const employeeData = {
+      organizationId: req.organization.id,
+      employeeId,
+      firstName,
+      lastName,
+      email,
+      phone,
+      dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+      position,
+      departmentId,
+      employmentType: employmentType || 'FULL_TIME',
+      hireDate: hireDate ? new Date(hireDate) : new Date(),
+      salary: salary ? parseFloat(salary) : null,
+      hourlyRate: hourlyRate ? parseFloat(hourlyRate) : null,
+      currency: currency || 'USD',
+      pin,
+      isActive: true
+    };
+
     const employee = await db.employee.create({
-      data: {
-        organizationId: req.organization.id,
-        firstName,
-        lastName,
-        employeeId,
-        email,
-        phone,
-        position,
-        departmentId,
-        employmentType: employmentType || 'FULL_TIME',
-        salary: salary ? parseFloat(salary) : null,
-        hourlyRate: hourlyRate ? parseFloat(hourlyRate) : null,
-        hireDate: hireDate ? new Date(hireDate) : new Date(),
-        isActive: true
-      },
+      data: employeeData,
       include: {
         department: {
           select: {
             id: true,
             name: true
           }
+        },
+        organization: {
+          select: {
+            id: true,
+            businessName: true,
+            orgCode: true
+          }
         }
       }
     });
 
-    logger.info(`Employee created: ${employeeId} by ${req.user?.email} in organization ${req.organization.orgCode}`);
+    logger.info(`Employee created: ${employeeId} by ${req.user?.email} in organization ${req.organization.orgCode}`, {
+      organizationId: req.organization.id,
+      employeeId,
+      firstName,
+      lastName
+    });
 
     return res.status(201).json({
       success: true,
@@ -325,7 +369,7 @@ router.post('/', requireHRManager, [
 });
 
 // @route   GET /api/v1/employees/:id
-// @desc    Get employee details
+// @desc    Get employee details (Phase 2 Smart Attendance System)
 // @access  Private (Manager+)
 router.get('/:id', requireManager, [
   param('id')
@@ -362,15 +406,42 @@ router.get('/:id', requireManager, [
         department: {
           select: {
             id: true,
-            name: true
+            name: true,
+            description: true
           }
         },
         user: {
           select: {
             id: true,
             email: true,
-            lastLoginAt: true,
-            role: true
+            role: true,
+            isActive: true,
+            lastLoginAt: true
+          }
+        },
+        attendanceRecords: {
+          orderBy: { date: 'desc' },
+          take: 10,
+          select: {
+            id: true,
+            date: true,
+            checkInTime: true,
+            checkOutTime: true,
+            hoursWorked: true,
+            status: true,
+            isLate: true,
+            isEarlyLeave: true,
+            overtimeHours: true
+          }
+        },
+        leaveRequests: {
+          where: { status: 'PENDING' },
+          select: {
+            id: true,
+            leaveType: true,
+            startDate: true,
+            endDate: true,
+            status: true
           }
         },
         _count: {
@@ -405,7 +476,7 @@ router.get('/:id', requireManager, [
 });
 
 // @route   PUT /api/v1/employees/:id
-// @desc    Update employee
+// @desc    Update employee (Phase 2 Smart Attendance System)
 // @access  Private (HR Manager+)
 router.put('/:id', requireHRManager, [
   param('id')
@@ -456,7 +527,19 @@ router.put('/:id', requireHRManager, [
   body('isActive')
     .optional()
     .isBoolean()
-    .withMessage('isActive must be a boolean')
+    .withMessage('isActive must be a boolean'),
+  body('dateOfBirth')
+    .optional()
+    .isISO8601()
+    .withMessage('Date of birth must be a valid date'),
+  body('terminationDate')
+    .optional()
+    .isISO8601()
+    .withMessage('Termination date must be a valid date'),
+  body('pin')
+    .optional()
+    .isLength({ min: 4, max: 8 })
+    .withMessage('PIN must be between 4 and 8 characters')
 ], auditUpdate('Employee'), async (req: Request, res: Response): Promise<Response> => {
   try {
     // Check validation errors
@@ -529,15 +612,22 @@ router.put('/:id', requireHRManager, [
       }
     }
 
+    // Process Phase 2 enhanced update data
+    const processedUpdateData: any = { ...updateData };
+    
     // Convert numeric strings to numbers
-    if (updateData.salary) updateData.salary = parseFloat(updateData.salary);
-    if (updateData.hourlyRate) updateData.hourlyRate = parseFloat(updateData.hourlyRate);
+    if (updateData.salary) processedUpdateData.salary = parseFloat(updateData.salary);
+    if (updateData.hourlyRate) processedUpdateData.hourlyRate = parseFloat(updateData.hourlyRate);
+    
+    // Convert date strings to Date objects
+    if (updateData.dateOfBirth) processedUpdateData.dateOfBirth = new Date(updateData.dateOfBirth);
+    if (updateData.terminationDate) processedUpdateData.terminationDate = new Date(updateData.terminationDate);
 
     // Update employee
     const updatedEmployee = await db.employee.update({
       where: { id },
       data: {
-        ...updateData,
+        ...processedUpdateData,
         updatedAt: new Date()
       },
       include: {
@@ -546,11 +636,23 @@ router.put('/:id', requireHRManager, [
             id: true,
             name: true
           }
+        },
+        user: {
+          select: {
+            id: true,
+            email: true,
+            role: true,
+            isActive: true
+          }
         }
       }
     });
 
-    logger.info(`Employee updated: ${existingEmployee.employeeId} by ${req.user?.email} in organization ${req.organization.orgCode}`);
+    logger.info(`Employee updated: ${existingEmployee.employeeId} by ${req.user?.email} in organization ${req.organization.orgCode}`, {
+      organizationId: req.organization.id,
+      employeeId: existingEmployee.employeeId,
+      changes: Object.keys(updateData)
+    });
 
     return res.status(200).json({
       success: true,
@@ -567,13 +669,17 @@ router.put('/:id', requireHRManager, [
 });
 
 // @route   DELETE /api/v1/employees/:id
-// @desc    Delete employee (soft delete by setting isActive to false)
+// @desc    Delete employee (soft delete by setting isActive to false) - Phase 2 Smart Attendance System
 // @access  Private (HR Manager+)
 router.delete('/:id', requireHRManager, [
   param('id')
     .isString()
     .isLength({ min: 1 })
-    .withMessage('Valid employee ID is required')
+    .withMessage('Valid employee ID is required'),
+  query('permanent')
+    .optional()
+    .isBoolean()
+    .withMessage('Permanent flag must be a boolean')
 ], auditDelete('Employee'), async (req: Request, res: Response): Promise<Response> => {
   try {
     // Check validation errors
@@ -594,6 +700,7 @@ router.delete('/:id', requireHRManager, [
     }
 
     const { id } = req.params;
+    const { permanent } = req.query;
 
     // Check if employee exists in this organization
     const employee = await db.employee.findFirst({
@@ -610,28 +717,273 @@ router.delete('/:id', requireHRManager, [
       });
     }
 
-    // Soft delete by setting isActive to false
-    const updatedEmployee = await db.employee.update({
-      where: { id },
-      data: {
-        isActive: false,
-        terminationDate: new Date(),
-        updatedAt: new Date()
+    if (permanent === 'true') {
+      // Permanent deletion (only if no attendance records) - Phase 2 feature
+      const attendanceCount = await db.attendanceRecord.count({
+        where: { employeeId: id }
+      });
+
+      if (attendanceCount > 0) {
+        return res.status(400).json({
+          success: false,
+          error: 'Cannot permanently delete employee with attendance records. Use soft delete instead.'
+        });
       }
-    });
 
-    logger.info(`Employee deactivated: ${employee.employeeId} by ${req.user?.email} in organization ${req.organization.orgCode}`);
+      await db.employee.delete({ where: { id } });
+      
+      logger.info(`Employee permanently deleted: ${employee.employeeId} by ${req.user?.email} in organization ${req.organization.orgCode}`, {
+        organizationId: req.organization.id,
+        employeeId: employee.employeeId
+      });
 
-    return res.status(200).json({
-      success: true,
-      message: 'Employee deactivated successfully',
-      data: { employee: updatedEmployee }
-    });
+      return res.status(200).json({
+        success: true,
+        message: 'Employee permanently deleted'
+      });
+    } else {
+      // Soft delete by setting isActive to false
+      const updatedEmployee = await db.employee.update({
+        where: { id },
+        data: {
+          isActive: false,
+          terminationDate: new Date(),
+          updatedAt: new Date()
+        }
+      });
+
+      logger.info(`Employee deactivated: ${employee.employeeId} by ${req.user?.email} in organization ${req.organization.orgCode}`, {
+        organizationId: req.organization.id,
+        employeeId: employee.employeeId
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: 'Employee deactivated successfully',
+        data: { employee: updatedEmployee }
+      });
+    }
   } catch (error: any) {
     logger.error('Failed to delete employee:', error);
     return res.status(500).json({
       success: false,
       error: 'Failed to delete employee'
+    });
+  }
+});
+
+// @route   POST /api/v1/employees/bulk-import
+// @desc    Bulk import employees (Phase 2 Smart Attendance System)
+// @access  Private (HR Manager+)
+router.post('/bulk-import', requireHRManager, [
+  body('employees')
+    .isArray({ min: 1 })
+    .withMessage('Employees array is required and must not be empty'),
+  body('employees.*.employeeId')
+    .trim()
+    .isLength({ min: 1, max: 20 })
+    .withMessage('Each employee must have a valid employee ID'),
+  body('employees.*.firstName')
+    .trim()
+    .isLength({ min: 1, max: 50 })
+    .withMessage('Each employee must have a valid first name'),
+  body('employees.*.lastName')
+    .trim()
+    .isLength({ min: 1, max: 50 })
+    .withMessage('Each employee must have a valid last name')
+], auditCreate('Employee'), async (req: Request, res: Response): Promise<Response> => {
+  try {
+    // Check validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        error: 'Validation failed',
+        details: errors.array()
+      });
+    }
+
+    if (!req.organization) {
+      return res.status(400).json({
+        success: false,
+        error: 'Organization context not found'
+      });
+    }
+
+    const { employees } = req.body;
+
+    const results: {
+      successful: any[];
+      failed: Array<{ employeeId: string; error: string }>;
+    } = {
+      successful: [],
+      failed: []
+    };
+
+    for (const employeeData of employees) {
+      try {
+        // Check if employee ID already exists
+        const existing = await db.employee.findFirst({
+          where: { 
+            organizationId: req.organization.id,
+            employeeId: employeeData.employeeId
+          }
+        });
+
+        if (existing) {
+          results.failed.push({
+            employeeId: employeeData.employeeId,
+            error: 'Employee ID already exists'
+          });
+          continue;
+        }
+
+        // Validate department if provided
+        if (employeeData.departmentId) {
+          const department = await db.department.findFirst({
+            where: {
+              id: employeeData.departmentId,
+              organizationId: req.organization.id
+            }
+          });
+
+          if (!department) {
+            results.failed.push({
+              employeeId: employeeData.employeeId,
+              error: 'Department not found'
+            });
+            continue;
+          }
+        }
+
+        const employee = await db.employee.create({
+          data: {
+            organizationId: req.organization.id,
+            employeeId: employeeData.employeeId,
+            firstName: employeeData.firstName,
+            lastName: employeeData.lastName,
+            email: employeeData.email,
+            phone: employeeData.phone,
+            dateOfBirth: employeeData.dateOfBirth ? new Date(employeeData.dateOfBirth) : null,
+            position: employeeData.position,
+            departmentId: employeeData.departmentId,
+            employmentType: employeeData.employmentType || 'FULL_TIME',
+            hireDate: employeeData.hireDate ? new Date(employeeData.hireDate) : new Date(),
+            salary: employeeData.salary ? parseFloat(employeeData.salary) : null,
+            hourlyRate: employeeData.hourlyRate ? parseFloat(employeeData.hourlyRate) : null,
+            currency: employeeData.currency || 'USD',
+            pin: employeeData.pin,
+            isActive: true
+          }
+        });
+
+        results.successful.push(employee);
+      } catch (error) {
+        results.failed.push({
+          employeeId: employeeData.employeeId,
+          error: 'Failed to create employee'
+        });
+      }
+    }
+
+    logger.info(`Bulk import completed by ${req.user?.email} in organization ${req.organization.orgCode}`, {
+      organizationId: req.organization.id,
+      successful: results.successful.length,
+      failed: results.failed.length
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: results,
+      message: `Import completed: ${results.successful.length} successful, ${results.failed.length} failed`
+    });
+  } catch (error: any) {
+    logger.error('Error in bulk import:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to process bulk import'
+    });
+  }
+});
+
+// @route   GET /api/v1/employees/bulk-export
+// @desc    Export employees data (Phase 2 Smart Attendance System)
+// @access  Private (Manager+)
+router.get('/bulk-export', requireManager, [
+  query('format')
+    .optional()
+    .isIn(['json', 'csv'])
+    .withMessage('Format must be either json or csv')
+], auditRead('Employee'), async (req: Request, res: Response): Promise<Response> => {
+  try {
+    // Check validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        error: 'Validation failed',
+        details: errors.array()
+      });
+    }
+
+    if (!req.organization) {
+      return res.status(400).json({
+        success: false,
+        error: 'Organization context not found'
+      });
+    }
+
+    const { format = 'json' } = req.query;
+
+    const employees = await db.employee.findMany({
+      where: { organizationId: req.organization.id },
+      include: {
+        department: {
+          select: {
+            name: true
+          }
+        }
+      },
+      orderBy: {
+        employeeId: 'asc'
+      }
+    });
+
+    if (format === 'csv') {
+      // Simple CSV format for Phase 2
+      const csvHeader = 'Employee ID,First Name,Last Name,Email,Phone,Position,Department,Employment Type,Hire Date,Salary,Hourly Rate,Is Active\n';
+      const csvData = employees.map((emp: any) => 
+        `${emp.employeeId},"${emp.firstName}","${emp.lastName}","${emp.email || ''}","${emp.phone || ''}","${emp.position || ''}","${emp.department?.name || ''}",${emp.employmentType},"${emp.hireDate.toISOString().split('T')[0]}","${emp.salary || ''}","${emp.hourlyRate || ''}",${emp.isActive}`
+      ).join('\n');
+
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', `attachment; filename="employees-${req.organization.orgCode}-${new Date().toISOString().split('T')[0]}.csv"`);
+      
+      logger.info(`Employee data exported as CSV by ${req.user?.email} in organization ${req.organization.orgCode}`, {
+        organizationId: req.organization.id,
+        count: employees.length
+      });
+
+      return res.send(csvHeader + csvData);
+    } else {
+      logger.info(`Employee data exported as JSON by ${req.user?.email} in organization ${req.organization.orgCode}`, {
+        organizationId: req.organization.id,
+        count: employees.length
+      });
+
+      return res.status(200).json({
+        success: true,
+        data: employees,
+        count: employees.length,
+        exportedAt: new Date().toISOString(),
+        organizationCode: req.organization.orgCode
+      });
+    }
+  } catch (error: any) {
+    logger.error('Error exporting employees:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to export employees'
     });
   }
 });
