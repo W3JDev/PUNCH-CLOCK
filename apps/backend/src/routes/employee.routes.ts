@@ -12,41 +12,6 @@ const router = Router();
 router.use(authenticateToken);
 router.use(tenantIsolation);
 
-// Schema validation types for Phase 2 Smart Attendance System
-interface CreateEmployeeRequest {
-  organizationId: string;
-  employeeId: string;
-  firstName: string;
-  lastName: string;
-  email?: string;
-  phone?: string;
-  dateOfBirth?: string;
-  position?: string;
-  departmentId?: string;
-  employmentType?: 'FULL_TIME' | 'PART_TIME' | 'CONTRACT' | 'INTERN' | 'TEMPORARY';
-  hireDate?: string;
-  salary?: number;
-  hourlyRate?: number;
-  currency?: string;
-  pin?: string;
-}
-
-interface UpdateEmployeeRequest {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phone?: string;
-  dateOfBirth?: string;
-  position?: string;
-  departmentId?: string;
-  employmentType?: 'FULL_TIME' | 'PART_TIME' | 'CONTRACT' | 'INTERN' | 'TEMPORARY';
-  terminationDate?: string;
-  salary?: number;
-  hourlyRate?: number;
-  pin?: string;
-  isActive?: boolean;
-}
-
 // @route   GET /api/v1/employees
 // @desc    Get all employees in the organization (Phase 2 Smart Attendance System)
 // @access  Private (Manager+)
@@ -847,7 +812,10 @@ router.post('/bulk-import', requireHRManager, [
 
     const { employees } = req.body;
 
-    const results = {
+    const results: {
+      successful: any[];
+      failed: Array<{ employeeId: string; error: string }>;
+    } = {
       successful: [],
       failed: []
     };
@@ -984,8 +952,8 @@ router.get('/bulk-export', requireManager, [
     if (format === 'csv') {
       // Simple CSV format for Phase 2
       const csvHeader = 'Employee ID,First Name,Last Name,Email,Phone,Position,Department,Employment Type,Hire Date,Salary,Hourly Rate,Is Active\n';
-      const csvData = employees.map(emp => 
-        `${emp.employeeId},"${emp.firstName}","${emp.lastName}","${emp.email || ''}","${emp.phone || ''}","${emp.position || ''}","${emp.department?.name || ''}",${emp.employmentType},"${emp.hireDate.toISOString().split('T')[0]}","${emp.salary || ''}","${emp.hourlyRate || '"}",${emp.isActive}`
+      const csvData = employees.map((emp: any) => 
+        `${emp.employeeId},"${emp.firstName}","${emp.lastName}","${emp.email || ''}","${emp.phone || ''}","${emp.position || ''}","${emp.department?.name || ''}",${emp.employmentType},"${emp.hireDate.toISOString().split('T')[0]}","${emp.salary || ''}","${emp.hourlyRate || ''}",${emp.isActive}`
       ).join('\n');
 
       res.setHeader('Content-Type', 'text/csv');
