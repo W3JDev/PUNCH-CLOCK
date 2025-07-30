@@ -62,7 +62,7 @@ function validateLocation(lat: number, lon: number, allowedLocations: any[]): bo
     const distance = Math.sqrt(
       Math.pow(lat - location.latitude, 2) + Math.pow(lon - location.longitude, 2)
     );
-    return distance < 0.001; // ~100m radius
+    return distance < GEOFENCING_RADIUS; // ~100m radius
   });
   
   return isWithinRange;
