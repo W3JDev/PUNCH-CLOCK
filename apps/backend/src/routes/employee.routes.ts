@@ -51,7 +51,14 @@ router.get('/', async (req: Request, res: Response) => {
       });
     }
 
-    let whereCondition: any = {
+    interface EmployeeWhereCondition {
+      organizationId: string;
+      departmentId?: string;
+      isActive?: boolean;
+      employmentType?: string;
+    }
+
+    let whereCondition: EmployeeWhereCondition = {
       organizationId: organizationId as string
     };
 
