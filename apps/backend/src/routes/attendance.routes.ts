@@ -34,10 +34,10 @@ function emitAttendanceUpdate(io: any, organizationId: string, eventType: string
   }
 }
 
-// Helper function to validate QR codes (basic time-based validation)
+// Helper function to validate QR codes with HMAC verification
 function validateQRCode(qrCode: string, employeeId: string): boolean {
   try {
-    // Basic QR code format: employeeId:timestamp:hash
+    // QR code format: employeeId:timestamp:hash
     const [id, timestamp, hash] = qrCode.split(':');
     
     if (id !== employeeId) return false;
