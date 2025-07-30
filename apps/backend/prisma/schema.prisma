@@ -56,6 +56,7 @@ model Organization {
   notifications   Notification[]
   auditLogs       AuditLog[]
   aiConversations AiConversation[]
+  aiMemoryStore   AiMemoryStore[]
   
   @@map("organizations")
 }
@@ -508,12 +509,44 @@ model AiConversation {
   title         String?
   messages      Json     // Array of message objects
   context       Json     @default("{}")
+  contextSummary String?
+  lastInteraction DateTime @default(now())
   
   // Metadata
   totalMessages Int      @default(0)
   isActive      Boolean  @default(true)
   
   @@map("ai_conversations")
+}
+
+model AiMemoryStore {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Organization
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // Memory Data
+  memoryType    AiMemoryType
+  content       Json     // Structured memory content
+  relevanceScore Decimal  @default(1.0)
+  lastAccessed  DateTime @default(now())
+  
+  // Metadata
+  tags          String[] @default([])
+  
+  @@map("ai_memory_store")
+}
+
+enum AiMemoryType {
+  EMPLOYEE_DATA
+  POLICIES
+  DECISIONS
+  PATTERNS
+  PREFERENCES
+  INSIGHTS
 }
 
 // ============================================================================

@@ -66,6 +66,88 @@ export default function DashboardPage() {
   const [employees, setEmployees] = useState(mockEmployees)
   const [stats, setStats] = useState(mockStats)
   const [loading, setLoading] = useState(false)
+  
+  // AI Chat state
+  const [showAIChat, setShowAIChat] = useState(false)
+  const [chatMessages, setChatMessages] = useState([
+    {
+      role: 'assistant',
+      content: 'Hello! I\'m your AI HR Assistant. I can help you with employee management, attendance tracking, shift scheduling, and generate insights about your workforce. How can I assist you today?',
+      timestamp: new Date().toISOString()
+    }
+  ])
+  const [currentMessage, setCurrentMessage] = useState('')
+  const [aiLoading, setAiLoading] = useState(false)
+  const [conversationId, setConversationId] = useState<string | null>(null)
+
+  const handleSendMessage = async () => {
+    if (!currentMessage.trim() || aiLoading) return
+
+    const userMessage = {
+      role: 'user' as const,
+      content: currentMessage,
+      timestamp: new Date().toISOString()
+    }
+
+    setChatMessages(prev => [...prev, userMessage])
+    setCurrentMessage('')
+    setAiLoading(true)
+
+    try {
+      const response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: currentMessage,
+          organizationId: 'demo-org-123', // In real app, get from auth context
+          userId: 'demo-user-123', // In real app, get from auth context
+          conversationId
+        })
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        const aiMessage = {
+          role: 'assistant' as const,
+          content: data.data.message,
+          timestamp: data.data.timestamp
+        }
+        
+        setChatMessages(prev => [...prev, aiMessage])
+        setConversationId(data.data.conversationId)
+
+        // Handle any AI actions
+        if (data.data.actions && data.data.actions.length > 0) {
+          console.log('AI Actions:', data.data.actions)
+          // In a real app, you might want to show these actions or execute them
+        }
+      } else {
+        throw new Error(data.error || 'Failed to get AI response')
+      }
+    } catch (error) {
+      console.error('Error sending message:', error)
+      const errorMessage = {
+        role: 'assistant' as const,
+        content: 'Sorry, I encountered an error. Please try again.',
+        timestamp: new Date().toISOString()
+      }
+      setChatMessages(prev => [...prev, errorMessage])
+    } finally {
+      setAiLoading(false)
+    }
+  }
+
+  const handleAIAction = async (message: string) => {
+    setShowAIChat(true)
+    setCurrentMessage(message)
+    // Small delay to ensure UI updates
+    setTimeout(() => {
+      handleSendMessage()
+    }, 100)
+  }
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -241,16 +323,74 @@ export default function DashboardPage() {
                     Would you like me to generate a detailed attendance report?
                   </p>
                   <div className="mt-3 flex space-x-2">
-                    <Button size="sm" variant="outline">
+                    <Button size="sm" variant="outline" onClick={() => handleAIAction('Generate attendance report for this week')}>
                       Generate Report
                     </Button>
-                    <Button size="sm" variant="ghost">
+                    <Button size="sm" variant="ghost" onClick={() => setShowAIChat(true)}>
                       Ask Question
                     </Button>
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* AI Chat Modal/Expanded View */}
+            {showAIChat && (
+              <div className="mt-4 border border-gray-200 rounded-lg p-4 bg-white">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-medium">Chat with AI Assistant</h3>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => setShowAIChat(false)}
+                  >
+                    ×
+                  </Button>
+                </div>
+                
+                <div className="max-h-96 overflow-y-auto mb-4 space-y-3">
+                  {chatMessages.map((msg, index) => (
+                    <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                        msg.role === 'user' 
+                          ? 'bg-blue-500 text-white' 
+                          : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        <p className="text-sm">{msg.content}</p>
+                        <p className="text-xs opacity-70 mt-1">
+                          {new Date(msg.timestamp).toLocaleTimeString()}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                  {aiLoading && (
+                    <div className="flex justify-start">
+                      <div className="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg">
+                        <p className="text-sm">AI is thinking...</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex space-x-2">
+                  <input
+                    type="text"
+                    value={currentMessage}
+                    onChange={(e) => setCurrentMessage(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    placeholder="Ask me about employees, attendance, or anything HR-related..."
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    disabled={aiLoading}
+                  />
+                  <Button 
+                    onClick={handleSendMessage}
+                    disabled={aiLoading || !currentMessage.trim()}
+                  >
+                    Send
+                  </Button>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
